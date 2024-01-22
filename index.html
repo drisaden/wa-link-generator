@@ -27,7 +27,7 @@
   
     <div class="bg-white p-8 rounded shadow-md max-w-md w-full">
     <label for="name" class="block text-sm font-medium text-gray-700">Enter your Full Name to generate your Unique link:</label>
-    <input type="text" id="name" class="mt-1 p-2 border rounded-md w-full">
+    <input type="text" id="name" class="mt-1 p-2 border rounded-md w-full focus:outline-none">
 
     <button onclick="generateLink()" class="mt-4 bg-diamond-2 text-white px-4 py-2 rounded-md">Generate Link</button>
 
@@ -41,7 +41,7 @@
 
     <!-- Modify the input and copy button placement -->
     <div class="relative flex items-center align-center">
-      <input type="text" id="copiableLink" class="mt-2 p-2 border rounded-md w-full" readonly>
+      <input type="text" id="copiableLink" class="mt-2 p-2 border rounded-md w-full focus:outline-none" readonly>
   
   <button onclick="shareLink()" class="absolute right-0 -top-7 mt-10 bg-blue-500 text-white px-2 mr-1 py-1 rounded-md">
     <i class="fas fa-share fa-sm"></i>
