@@ -49,14 +49,11 @@
 </div>
 <p id="alert" class="text-sm tx-diamond-2 mt-2"></p>
  <div class="flex justify-center">
-              <button id="viewShorten" class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont" type="button">Share in shortened link</button>
+              <button id="viewShorten" class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont" type="button">View in shortened link</button>
             </div>
              
   </div>
 </div>
-
-867f6b202992de920a602d38481d6e61067115fd
-
 
   <script>
  /* function generateLink() {
@@ -215,7 +212,7 @@ async function generateLink() {
   modal.classList.remove('hidden');
 }*/
 
-const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
+/*const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
 
 async function shortenLink(longUrl) {
   const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
@@ -246,39 +243,6 @@ async function shortenLink(longUrl) {
   }
 }
 
-function copyLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  const alertElement = document.getElementById('alert');
-  alertElement.textContent = 'Link copied to clipboard!';
-}
-
-async function shareLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
-
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
-  }
-
-  headSection.appendChild(ogUrlTag);
-
-  // Display an alert or perform any other desired action
-  alert('Link copied to clipboard. Open Graph tags updated.');
-}
-
-// Example usage:
 async function generateLink() {
   const name = document.getElementById('name').value;
 
@@ -300,7 +264,7 @@ async function generateLink() {
   // Shorten the link dynamically
  /* const shortenedLink = await shortenLink(waLink);*/
 
-  const copiableLink = document.getElementById('copiableLink');
+  /*const copiableLink = document.getElementById('copiableLink');
   copiableLink.value = waLink;
 
   // Show the modal
@@ -344,6 +308,136 @@ function shareLinkFromButton() {
 }
 
 
+/*function copyLink() {
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.select();
+  document.execCommand('copy');
+
+  const alertElement = document.getElementById('alert');
+  alertElement.textContent = 'Link copied to clipboard!';
+}
+
+async function shareLink() {
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.select();
+  document.execCommand('copy');
+
+  // Update Open Graph tags dynamically
+  const headSection = document.getElementById('head-section');
+  const ogUrlTag = document.createElement('meta');
+  ogUrlTag.setAttribute('property', 'og:url');
+  ogUrlTag.content = copiableLink.value;
+
+  // Replace existing og:url tag if it exists
+  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  if (existingOgUrlTag) {
+    headSection.removeChild(existingOgUrlTag);
+  }
+
+  headSection.appendChild(ogUrlTag);
+
+  // Display an alert or perform any other desired action
+  alert('Link copied to clipboard. Open Graph tags updated.');
+}
+
+// Example usage:*/
+
+
+const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
+
+async function shortenLink(longUrl) {
+  const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${bitlyAccessToken}`,
+    },
+    body: JSON.stringify({
+      long_url: longUrl,
+    }),
+  };
+
+  try {
+    const response = await fetch(apiUrl, requestOptions);
+    const data = await response.json();
+
+    if (data && data.id) {
+      return data.id;
+    } else {
+      console.error('Failed to shorten link:', data);
+      return longUrl; // Return the original link in case of failure
+    }
+  } catch (error) {
+    console.error('Error during link shortening:', error);
+    return longUrl; // Return the original link in case of an error
+  }
+}
+
+async function generateLink() {
+  const name = document.getElementById('name').value;
+
+  // Validate input
+  if (!name.trim()) {
+    alert('Please enter your name.');
+    return;
+  }
+
+  if (!/^[a-zA-Z\s]*$/.test(name)) {
+    alert('Please use only letters and spaces for your name.');
+    return;
+  }
+
+  const waNumber = '2347086334968';
+  const message = `Hi, I was referred by ${name}`;
+  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+
+  // Shorten the link dynamically
+  /* const shortenedLink = await shortenLink(waLink); */
+
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.value = waLink;
+
+  // Show the modal
+  const modal = document.getElementById('default-modal');
+  modal.classList.remove('hidden');
+
+  // Display the shortened link in the button with id="viewShorten"
+  const viewShortenButton = document.getElementById('viewShorten');
+  viewShortenButton.addEventListener('click', async () => {
+    // Add logic to share the link when the button is clicked
+    await shareLinkFromButton(waLink);
+  });
+
+  // ... (existing code remains unchanged)
+}
+
+async function shareLinkFromButton(originalLink) {
+  const shortenedLink = await shortenLink(originalLink);
+
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.value = shortenedLink;
+  copiableLink.select();
+  document.execCommand('copy');
+
+  // Update Open Graph tags dynamically
+  const headSection = document.getElementById('head-section');
+  const ogUrlTag = document.createElement('meta');
+  ogUrlTag.setAttribute('property', 'og:url');
+  ogUrlTag.content = copiableLink.value;
+
+  // Replace existing og:url tag if it exists
+  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  if (existingOgUrlTag) {
+    headSection.removeChild(existingOgUrlTag);
+  }
+
+  headSection.appendChild(ogUrlTag);
+
+  shareLink(); // Uncomment this line if you want to trigger the share function
+}
+
+// ... (existing code remains unchanged)
 
 
   </script>
