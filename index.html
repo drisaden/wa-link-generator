@@ -410,6 +410,12 @@ async function generateLink() {
     await shareLinkFromButton(waLink);
   });
 
+// Add event listener to close modal when clicking outside the modal content
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
   // ... (existing code remains unchanged)
 }
 
@@ -449,16 +455,16 @@ function shareLink() {
 async function shareLinkFromButton(originalLink) {
   const shortenedLink = await shortenLink(originalLink);
 
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = shortenedLink;
-  copiableLink.select();
+//  const copiableLink = document.getElementById('copiableLink');
+//copiableLink.value = shortenedLink;
+  shortenedLink.select();
   document.execCommand('copy');
 
   // Update Open Graph tags dynamically
   const headSection = document.getElementById('head-section');
   const ogUrlTag = document.createElement('meta');
   ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
+  ogUrlTag.content = shortenedLink.value;
 
   // Replace existing og:url tag if it exists
   const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
@@ -468,7 +474,7 @@ async function shareLinkFromButton(originalLink) {
 
   headSection.appendChild(ogUrlTag);
 
-  shareLink(); // Uncomment this line if you want to trigger the share function
+  //shareLink(); // Uncomment this line if you want to trigger the share function
 }
 
 function closeModal() {
