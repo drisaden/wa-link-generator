@@ -345,6 +345,7 @@ async function shareLink() {
 
 const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
 
+
 async function shortenLink(longUrl) {
   const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
   const requestOptions = {
@@ -389,8 +390,8 @@ async function generateLink() {
   }
 
   const waNumber = '2347086334968';
-  const message = `Hi, I was referred by ${name}`;
-  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+  const message = `Hi, I want to join Moon Scholar. I was referred by ${name}`;
+    const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
 
   // Shorten the link dynamically
   /* const shortenedLink = await shortenLink(waLink); */
@@ -411,6 +412,39 @@ async function generateLink() {
 
   // ... (existing code remains unchanged)
 }
+
+function shareLink() {
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.select();
+  document.execCommand('copy');
+
+  // Update Open Graph tags dynamically
+  const headSection = document.getElementById('head-section');
+  const ogUrlTag = document.createElement('meta');
+  ogUrlTag.setAttribute('property', 'og:url');
+  ogUrlTag.content = copiableLink.value;
+
+  // Replace existing og:url tag if it exists
+  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  if (existingOgUrlTag) {
+    headSection.removeChild(existingOgUrlTag);
+  }
+
+  headSection.appendChild(ogUrlTag);
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Join Moon Scholar TV Now!!!',
+      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
+      url: copiableLink.value,
+    })
+    .then(() => console.log('Link shared successfully'))
+    .catch((error) => console.error('Error sharing link:', error));
+  } else {
+    alert('Sharing is not supported in your browser.');
+  }
+}
+
 
 async function shareLinkFromButton(originalLink) {
   const shortenedLink = await shortenLink(originalLink);
@@ -436,6 +470,12 @@ async function shareLinkFromButton(originalLink) {
 
   shareLink(); // Uncomment this line if you want to trigger the share function
 }
+
+function closeModal() {
+  const modal = document.getElementById('default-modal');
+  modal.classList.add('hidden');
+}
+
 
 // ... (existing code remains unchanged)
 
