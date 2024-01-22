@@ -42,13 +42,9 @@
     <!-- Modify the input and copy button placement -->
     <div class="relative flex items-center align-center">
       <input type="text" id="copiableLink" class="mt-2 p-2 border rounded-md w-full" readonly>
-      
-  <button onclick="copyLink()" class="absolute right-0 -top-7 mt-10 bg-diamond-2 text-white px-2 mr-1 py-1 rounded-md">
-  <i class="fas fa-clone fa-sm"></i>
-</button>
   
   <button onclick="shareLink()" class="absolute right-0 -top-7 mt-10 bg-blue-500 text-white px-2 mr-1 py-1 rounded-md">
-    <i class="fas fa-share fa-sm"></i>
+    <i class="fas fa-clone fa-sm"></i>
   </button>
 </div>
 <p id="alert" class="text-sm tx-diamond-2 mt-5"></p>
@@ -73,7 +69,7 @@
     }
   
     const waNumber = '2347086334968';
-    const message = `Hi, I was referred by ${name}`;
+    const message = `Hi, I want to join Moon Scholar. I was referred by ${name}`;
     const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
   
     const copiableLink = document.getElementById('copiableLink');
@@ -130,8 +126,8 @@
 
   if (navigator.share) {
     navigator.share({
-      title: 'WhatsApp Referral Link',
-      text: 'Check out this referral link on WhatsApp!',
+      title: 'Join Moon Scholar TV Now!!!',
+      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
       url: copiableLink.value,
     })
     .then(() => console.log('Link shared successfully'))
