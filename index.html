@@ -449,23 +449,23 @@ async function shareLinkFromButton(originalLink) {
   copiableLink.select();
   document.execCommand('copy');
 
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
-
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector(`meta[property="${waLink}og:url"`);
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
+  // Use navigator.share for sharing if supported
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: 'WhatsApp Referral Link',
+        text: 'Check out this referral link on WhatsApp!',
+        url: shortenedLink,
+      });
+    } catch (error) {
+      console.error('Error sharing link:', error);
+    }
+  } else {
+    alert('Sharing is not supported in your browser. Link copied to clipboard.');
   }
-
-  headSection.appendChild(ogUrlTag);
-  
-  shareLink();
-
 }
+
+
 function closeModal() {
   const modal = document.getElementById('default-modal');
   modal.classList.add('hidden');
