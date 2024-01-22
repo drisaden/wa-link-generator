@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head id="head-section">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Dynamic WhatsApp Link Generator</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css"
+        integrity="sha512-xX2rYBFJSj86W54Fyv1de80DWBq7zYLn2z0I9bIhQG+rxIF6XVJUpdGnsNHWRa6AvP89vtFupEPDP8eZAtu9qA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.10/dist/clipboard.min.js"></script>
+<link rel="stylesheet" href="https://adenaikeidris.com.ng/assets/css/style.css">
+
+<!-- Your existing HTML content -->
+
+<script src="script.js"></script>
+
+</head>
+<body>
+  <main class="bg-gray-100 h-screen flex items-center justify-center">
+  
+    <div class="bg-white p-8 rounded shadow-md max-w-md w-full">
+    <label for="name" class="block text-sm font-medium text-gray-700">Your Name:</label>
+    <input type="text" id="name" class="mt-1 p-2 border rounded-md w-full">
+
+    <button onclick="generateLink()" class="mt-4 bg-diamond-2 text-white px-4 py-2 rounded-md">Generate Link</button>
+
+   </div>
+  </main>
+  
+  <!-- Add a modal to your HTML -->
+<div id="default-modal" class="modal hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
+  <div class="modal-content bg-white p-5 rounded shadow-md w-11/12"> <!-- Increase the modal width -->
+    <p class="text-green-500">Generated WhatsApp Link:</p>
+
+    <!-- Modify the input and copy button placement -->
+    <div class="relative flex items-center align-center">
+      <input type="text" id="copiableLink" class="mt-2 p-2 border rounded-md w-full" readonly>
+      
+  <button onclick="copyLink()" class="absolute right-0 -top-7 mt-10 bg-diamond-2 text-white px-2 mr-1 py-1 rounded-md">
+  <i class="fas fa-clone fa-sm"></i>
+</button>
+  
+  <button onclick="shareLink()" class="absolute right-0 -top-7 mt-10 bg-blue-500 text-white px-2 mr-1 py-1 rounded-md">
+    <i class="fas fa-share fa-sm"></i>
+  </button>
+</div>
+<p id="alert" class="text-sm tx-diamond-2 mt-5"></p>
+
+  </div>
+</div>
+
+
+  <script>
+  function generateLink() {
+    const name = document.getElementById('name').value;
+  
+    // Validate input
+    if (!name.trim()) {
+      alert('Please enter your name.');
+      return;
+    }
+  
+    if (!/^[a-zA-Z\s]*$/.test(name)) {
+      alert('Please use only letters and spaces for your name.');
+      return;
+    }
+  
+    const waNumber = '2347086334968';
+    const message = `Hi, I was referred by ${name}`;
+    const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+  
+    const copiableLink = document.getElementById('copiableLink');
+    copiableLink.value = waLink;
+  
+    // Show the modal
+    const modal = document.getElementById('default-modal');
+    modal.classList.remove('hidden');
+  
+    // Add event listener to close modal when clicking outside the modal content
+    modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+  }
+  
+  // ... (copyLink() and closeModal() remain unchanged)
+  
+  function copyLink() {
+    const copiableLink = document.getElementById('copiableLink');
+    copiableLink.select();
+    document.execCommand('copy');
+  
+    // Update the "alert" id content
+    const alertElement = document.getElementById('alert');
+    alertElement.textContent = 'Link copied to clipboard!';
+  }
+  
+  document.getElementById('copiableLink').addEventListener('focus', function() {
+  copyLink();
+});
+
+  
+  
+  function shareLink() {
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.select();
+  document.execCommand('copy');
+
+  // Update Open Graph tags dynamically
+  const headSection = document.getElementById('head-section');
+  const ogUrlTag = document.createElement('meta');
+  ogUrlTag.setAttribute('property', 'og:url');
+  ogUrlTag.content = copiableLink.value;
+
+  // Replace existing og:url tag if it exists
+  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  if (existingOgUrlTag) {
+    headSection.removeChild(existingOgUrlTag);
+  }
+
+  headSection.appendChild(ogUrlTag);
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'WhatsApp Referral Link',
+      text: 'Check out this referral link on WhatsApp!',
+      url: copiableLink.value,
+    })
+    .then(() => console.log('Link shared successfully'))
+    .catch((error) => console.error('Error sharing link:', error));
+  } else {
+    alert('Sharing is not supported in your browser.');
+  }
+}
+
+
+// ... (generateLink(), copyLink(), and closeModal() remain unchanged)
+
+function closeModal() {
+  const modal = document.getElementById('default-modal');
+  modal.classList.add('hidden');
+}
+
+// Add event listener for input focus
+
+
+  </script>
+</body>
+</html>
