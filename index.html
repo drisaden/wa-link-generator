@@ -56,7 +56,7 @@
 </div>
 
   <script>
- /* function generateLink() {
+ /*function generateLink() {
     const name = document.getElementById('name').value;
   
     // Validate input
@@ -146,12 +146,11 @@ function closeModal() {
   const modal = document.getElementById('default-modal');
   modal.classList.add('hidden');
 }
-
-// Add event listener for input focus
 */
+// Add event listener for input focus
 
   // Assuming you have a Bitly access token, replace 'YOUR_ACCESS_TOKEN' with your actual token.
-/*const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd';
+const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd';
 
 async function shortenLink(longUrl) {
   const apiUrl = `https://api-ssl.bitly.com/v4/shorten`;
@@ -210,7 +209,61 @@ async function generateLink() {
   // Show the modal
   const modal = document.getElementById('default-modal');
   modal.classList.remove('hidden');
-}*/
+}
+
+function copyLink() {
+    const copiableLink = document.getElementById('copiableLink');
+    copiableLink.select();
+    document.execCommand('copy');
+  
+    // Update the "alert" id content
+    const alertElement = document.getElementById('alert');
+    alertElement.textContent = 'Link copied to clipboard!';
+  }
+  
+  document.getElementById('copiableLink').addEventListener('focus', function() {
+  copyLink();
+});
+
+  
+  
+  function shareLink() {
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.select();
+  document.execCommand('copy');
+
+  // Update Open Graph tags dynamically
+  const headSection = document.getElementById('head-section');
+  const ogUrlTag = document.createElement('meta');
+  ogUrlTag.setAttribute('property', 'og:url');
+  ogUrlTag.content = copiableLink.value;
+
+  // Replace existing og:url tag if it exists
+  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  if (existingOgUrlTag) {
+    headSection.removeChild(existingOgUrlTag);
+  }
+
+  headSection.appendChild(ogUrlTag);
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'Join Moon Scholar TV Now!!!',
+      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
+      url: copiableLink.value,
+    })
+    .then(() => console.log('Link shared successfully'))
+    .catch((error) => console.error('Error sharing link:', error));
+  } else {
+    alert('Sharing is not supported in your browser.');
+  }
+}
+
+
+function closeModal() {
+  const modal = document.getElementById('default-modal');
+  modal.classList.add('hidden');
+}
 
 /*const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
 
@@ -342,136 +395,6 @@ async function shareLink() {
 
 // Example usage:*/
 
-
-const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
-
-
-async function shortenLink(longUrl) {
-  const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${bitlyAccessToken}`,
-    },
-    body: JSON.stringify({
-      long_url: longUrl,
-    }),
-  };
-
-  try {
-    const response = await fetch(apiUrl, requestOptions);
-    const data = await response.json();
-
-    if (data && data.id) {
-      return data.id;
-    } else {
-      console.error('Failed to shorten link:', data);
-      return longUrl; // Return the original link in case of failure
-    }
-  } catch (error) {
-    console.error('Error during link shortening:', error);
-    return longUrl; // Return the original link in case of an error
-  }
-}
-
-async function generateLink() {
-  const name = document.getElementById('name').value;
-
-  // Validate input
-  if (!name.trim()) {
-    alert('Please enter your name.');
-    return;
-  }
-
-  if (!/^[a-zA-Z\s]*$/.test(name)) {
-    alert('Please use only letters and spaces for your name.');
-    return;
-  }
-
-  const waNumber = '2347086334968';
-  const message = `Hi, I want to join Moon Scholar. I was referred by ${name}`;
-    const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-
-  // Shorten the link dynamically
-  /* const shortenedLink = await shortenLink(waLink); */
-
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = waLink;
-
-  // Show the modal
-  const modal = document.getElementById('default-modal');
-  modal.classList.remove('hidden');
-
-  // Display the shortened link in the button with id="viewShorten"
-  const viewShortenButton = document.getElementById('viewShorten');
-  viewShortenButton.addEventListener('click', async () => {
-    // Add logic to share the link when the button is clicked
-    await shareLinkFromButton(waLink);
-  });
-
-// Add event listener to close modal when clicking outside the modal content
-    modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-  // ... (existing code remains unchanged)
-}
-
-async function shareLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  // Use navigator.share for sharing if supported
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'WhatsApp Referral Link',
-        text: 'Check out this referral link on WhatsApp!',
-        url: copiableLink.value,
-      });
-    } catch (error) {
-      console.error('Error sharing link:', error);
-    }
-  } else {
-    alert('Link copied to clipboard.');
-  }
-}
-
-async function shareLinkFromButton(originalLink) {
-  const shortenedLink = await shortenLink(originalLink);
-
-  //const copiableLink = document.getElementById('copiableLink');
-  /*const copiableNew = shortenedLink.value;
-  copiableNew.select();
-  document.execCommand('copy');*/
-
-  // Use navigator.share for sharing if supported
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'WhatsApp Referral Link',
-        text: 'Check out this referral link on WhatsApp!',
-        url: originalLink,
-      });
-    } catch (error) {
-      console.error('Error sharing link:', error);
-    }
-  } else {
-    alert('Sharing is not supported in your browser. Link copied to clipboard.');
-  }
-}
-
-
-function closeModal() {
-  const modal = document.getElementById('default-modal');
-  modal.classList.add('hidden');
-}
-
-
-// ... (existing code remains unchanged)
 
 
   </script>
