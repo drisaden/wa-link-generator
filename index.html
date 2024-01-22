@@ -438,45 +438,34 @@ function shareLink() {
 
   headSection.appendChild(ogUrlTag);
 
-  if (navigator.share) {
-    navigator.share({
-      title: 'Join Moon Scholar TV Now!!!',
-      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
-      url: copiableLink.value,
-    })
-    .then(() => console.log('Link shared successfully'))
-    .catch((error) => console.error('Error sharing link:', error));
-  } else {
-    alert('Sharing is not supported in your browser.');
-  }
 }
 
 
 async function shareLinkFromButton(originalLink) {
   const shortenedLink = await shortenLink(originalLink);
 
-//  const copiableLink = document.getElementById('copiableLink');
-//copiableLink.value = shortenedLink;
-  shortenedLink.select();
+  const copiableLink = document.getElementById('copiableLink');
+  copiableLink.value = shortenedLink;
+  copiableLink.select();
   document.execCommand('copy');
 
   // Update Open Graph tags dynamically
   const headSection = document.getElementById('head-section');
   const ogUrlTag = document.createElement('meta');
   ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = shortenedLink.value;
+  ogUrlTag.content = copiableLink.value;
 
   // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
+  const existingOgUrlTag = document.querySelector(`meta[property="${waLink}og:url"`);
   if (existingOgUrlTag) {
     headSection.removeChild(existingOgUrlTag);
   }
 
   headSection.appendChild(ogUrlTag);
+  
+  shareLink();
 
-  //shareLink(); // Uncomment this line if you want to trigger the share function
 }
-
 function closeModal() {
   const modal = document.getElementById('default-modal');
   modal.classList.add('hidden');
