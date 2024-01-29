@@ -55,7 +55,13 @@
               <button id="shortenBtn"  class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont" type="button">View in shortened link</button>
             </div>
              
+   <div class="flex justify-center">
+     <button id="shareBtn" class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont mr-1 py-1" type="button">Share    <i class="fas fa-share fa-sm"></i></button>
+   </div>
+   </div>
+  
   </div>
+  
 </div>
 
     <!--<div class="max-w-md p-6 bg-white rounded-md shadow-md">
@@ -80,6 +86,7 @@
     const generateBtn = document.getElementById("generateBtn");
     const copyBtn = document.getElementById("copyBtn");
     const shortenBtn = document.getElementById("shortenBtn");
+    const shareBtn = document.getElementById("shareBtn");
     const generatedLink = document.getElementById("generatedLink");
     const resultSection = document.querySelector(".modal");
     const nameInput = document.getElementById("name");
@@ -105,9 +112,6 @@
        
   const linkTemplate = `https://wa.me/${waNumber}?text=%20Hi%2C%20I%20want%20to%20join%20Moonscholar.%20I%20was%20referred%20by%20${name}%20-Ref${uniqueID}.%20`;
         
-
-       // const linkTemplate = `wa.me/234906967373?text=Hi, Moonscholar. I want to join Moonscholar TV. I was referred by ${name}`;
-
         generatedLink.value = linkTemplate;
         resultSection.classList.remove("hidden");
     });
@@ -157,6 +161,29 @@
                 console.error('Error creating short link:', error);
                 // Handle errors in your web app
             });
+    });
+    
+    shareBtn.addEventListener("click", function () {
+        const name = nameInput.value.trim();
+        const userNumber = "234906967373"; // Replace with the actual user's number
+        const userDestination = "Moonscholar TV"; // Replace with the actual destination
+        const cta = "Join now!"; // Replace with your Call-to-Action
+
+        const title = `Join ${userDestination} with ${name}`;
+        const text = `Hi, ${name}! You've been referred to ${userDestination}. Join now: ${generatedLink.value} ${cta}`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: text,
+                url: generatedLink.value || "",
+            })
+            .then(() => console.log('Shared successfully'))
+            .catch((error) => console.error('Error sharing:', error));
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            alert("Sharing is not supported in this browser.");
+        }
     });
 
     function generateUniqueID() {
