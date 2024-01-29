@@ -152,6 +152,52 @@ function closeModal() {
   // Assuming you have a Bitly access token, replace 'YOUR_ACCESS_TOKEN' with your actual token.
 const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd';
 
+async function generateLink() {
+  const name = document.getElementById('name').value;
+
+  // Validate input
+  if (!name.trim()) {
+    alert('Please enter your name.');
+    return;
+  }
+
+  if (!/^[a-zA-Z\s]*$/.test(name)) {
+    alert('Please use only letters and spaces for your name.');
+    return;
+  }
+
+  const waNumber = '2347086334968';
+  const message = `Hi, I was referred by ${name}`;
+  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
+
+  // Shorten the link dynamically
+  const shortenedLink = await shortenLink(waLink);
+
+const copiableLink = document.getElementById('copiableLink');
+  copiableLink.value = shortenedLink;
+
+  // Show the modal
+  const modal = document.getElementById('default-modal');
+  modal.classList.remove('hidden');
+  
+  modal.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        closeModal();
+      }
+    });
+    
+    // Display the shortened link in the button with id="viewShorten"
+    const viewShortenButton = document.getElementById('viewShorten');
+    viewShortenButton.addEventListener('click', () => {
+      const copiableLink = document.getElementById('copiableLink');
+  copiableLink.value = shortenedLink;
+
+      // Add logic to share the link when the button is clicked
+      
+      //shareLinkFromButton();
+    });
+}
+
 async function shortenLink(longUrl) {
   const apiUrl = `https://api-ssl.bitly.com/v4/shorten`;
   const requestOptions = {
@@ -182,34 +228,7 @@ async function shortenLink(longUrl) {
 }
 
 // Example usage:
-async function generateLink() {
-  const name = document.getElementById('name').value;
 
-  // Validate input
-  if (!name.trim()) {
-    alert('Please enter your name.');
-    return;
-  }
-
-  if (!/^[a-zA-Z\s]*$/.test(name)) {
-    alert('Please use only letters and spaces for your name.');
-    return;
-  }
-
-  const waNumber = '2347086334968';
-  const message = `Hi, I was referred by ${name}`;
-  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-
-  // Shorten the link dynamically
-  const shortenedLink = await shortenLink(waLink);
-
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = shortenedLink;
-
-  // Show the modal
-  const modal = document.getElementById('default-modal');
-  modal.classList.remove('hidden');
-}
 
 function copyLink() {
     const copiableLink = document.getElementById('copiableLink');
@@ -225,7 +244,8 @@ function copyLink() {
   copyLink();
 });
 
-  
+      // Add event listener to close modal when clicking outside the modal content
+    
   
   function shareLink() {
   const copiableLink = document.getElementById('copiableLink');
