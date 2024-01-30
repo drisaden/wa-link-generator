@@ -64,23 +64,6 @@
   
 </div>
 
-    <!--<div class="max-w-md p-6 bg-white rounded-md shadow-md">
-        <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Enter your name:</label>
-        <input type="text" id="name" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:border-blue-300" />
-
-        <button id="generateBtn" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none">Generate Link</button>
-
-        <div id="result" class="mt-4 hidden">
-            <p class="mb-2"><strong>Your Link:</strong></p>
-            <div class="flex items-center mb-2">
-                <input type="text" id="generatedLink" class="flex-grow px-3 py-2 border rounded-l-md focus:outline-none focus:ring focus:border-blue-300" readonly />
-                <button id="copyBtn" class="bg-blue-500 text-white px-4 py-2 rounded-r-md focus:outline-none">Copy</button>
-            </div>
-
-            <button id="shortenBtn" class="bg-green-500 text-white px-4 py-2 rounded-md focus:outline-none">Shorten Link</button>
-        </div>
-    </div>-->
-
     <script>
       document.addEventListener("DOMContentLoaded", function () {
     const generateBtn = document.getElementById("generateBtn");
@@ -187,7 +170,7 @@
     });
 
     function generateUniqueID() {
-        return Math.floor(Math.random() * 1000000);
+        return Math.floor(Math.random() * 1000);
     }
 });
 
