@@ -22,14 +22,17 @@
 <script src="script.js"></script>
 
 </head>
-<body>
+<!--<body class="bg-gray-200 min-h-screen flex items-center justify-center">-->
+  <body>
+    
+  
   <main class="bg-gray-100 h-screen flex items-center justify-center">
   
-    <div class="bg-white p-8 rounded shadow-md max-w-md w-full">
+    <div class="bg-white p-8 rounded shadow-md max-w-md w-full mx-10">
     <label for="name" class="block text-sm font-medium text-gray-700">Enter your Full Name to generate your Unique link:</label>
     <input type="text" id="name" class="mt-1 p-2 border rounded-md w-full focus:outline-none">
 
-    <button onclick="generateLink()" class="mt-4 bg-diamond-2 text-white px-4 py-2 rounded-md">Generate Link</button>
+    <button id="generateBtn"  class="mt-4 bg-diamond-2 text-white px-4 py-2 rounded-md">Generate Link</button>
 
    </div>
   </main>
@@ -41,382 +44,138 @@
 
     <!-- Modify the input and copy button placement -->
     <div class="relative flex items-center align-center">
-      <input type="text" id="copiableLink" class="mt-2 p-2 border rounded-md w-full focus:outline-none" readonly>
+      <input type="text" id="generatedLink" class="mt-2 p-2 border rounded-md w-full focus:outline-none" readonly>
   
-  <button onclick="shareLink()" class="absolute right-0 -top-7 mt-10 bg-blue-500 text-white px-2 mr-1 py-1 rounded-md">
-    <i class="fas fa-share fa-sm"></i>
+  <button id="copyBtn" class="absolute right-0 -top-7 mt-10 bg-blue-500 text-white px-2 mr-1 py-1 rounded-md">
+    <i class="fas fa-copy fa-sm"></i>
   </button>
 </div>
 <p id="alert" class="text-sm tx-diamond-2 mt-2"></p>
  <div class="flex justify-center">
-              <button id="viewShorten" class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont" type="button">View in shortened link</button>
+              <button id="shortenBtn"  class="link-btn mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont" type="button">View in shortened link</button>
             </div>
              
+   <div class="flex justify-center">
+     <button id="shareBtn" class="mb-10 focus:outline-none focus:ring-0 block tx-diamond  font-semibold md:font-medium relative leading-none text-sm tx-mont mr-1 py-2 bg-blue-500 text-white px-2" type="button">Share    <i class="fas fa-share fa-sm"></i></button>
+   </div>
+   </div>
+  
   </div>
+  
 </div>
 
-  <script>
- /*function generateLink() {
-    const name = document.getElementById('name').value;
-  
-    // Validate input
-    if (!name.trim()) {
-      alert('Please enter your name.');
-      return;
-    }
-  
-    if (!/^[a-zA-Z\s]*$/.test(name)) {
-      alert('Please use only letters and spaces for your name.');
-      return;
-    }
-  
-    const waNumber = '2347086334968';
-    const message = `Hi, I want to join Moon Scholar. I was referred by ${name}`;
-    const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-  
-    const copiableLink = document.getElementById('copiableLink');
-    copiableLink.value = waLink;
-  
-    // Show the modal
-    const modal = document.getElementById('default-modal');
-    modal.classList.remove('hidden');
-  
-    // Add event listener to close modal when clicking outside the modal content
-    modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-  }
-  
-  // ... (copyLink() and closeModal() remain unchanged)
-  
-  function copyLink() {
-    const copiableLink = document.getElementById('copiableLink');
-    copiableLink.select();
-    document.execCommand('copy');
-  
-    // Update the "alert" id content
-    const alertElement = document.getElementById('alert');
-    alertElement.textContent = 'Link copied to clipboard!';
-  }
-  
-  document.getElementById('copiableLink').addEventListener('focus', function() {
-  copyLink();
-});
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    const generateBtn = document.getElementById("generateBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const shortenBtn = document.getElementById("shortenBtn");
+    const shareBtn = document.getElementById("shareBtn");
+    const generatedLink = document.getElementById("generatedLink");
+    const resultSection = document.querySelector(".modal");
+    const nameInput = document.getElementById("name");
 
-  
-  
-  function shareLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
-
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
-  }
-
-  headSection.appendChild(ogUrlTag);
-
-  if (navigator.share) {
-    navigator.share({
-      title: 'Join Moon Scholar TV Now!!!',
-      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
-      url: copiableLink.value,
-    })
-    .then(() => console.log('Link shared successfully'))
-    .catch((error) => console.error('Error sharing link:', error));
-  } else {
-    alert('Sharing is not supported in your browser.');
-  }
-}
-
-
-// ... (generateLink(), copyLink(), and closeModal() remain unchanged)
-
-function closeModal() {
-  const modal = document.getElementById('default-modal');
-  modal.classList.add('hidden');
-}
-*/
-// Add event listener for input focus
-
-  // Assuming you have a Bitly access token, replace 'YOUR_ACCESS_TOKEN' with your actual token.
-const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd';
-
-async function generateLink() {
-  const name = document.getElementById('name').value;
-
-  // Validate input
-  if (!name.trim()) {
-    alert('Please enter your name.');
-    return;
-  }
-
-  if (!/^[a-zA-Z\s]*$/.test(name)) {
-    alert('Please use only letters and spaces for your name.');
-    return;
-  }
-
-  const waNumber = '2347086334968';
-  const message = `Hi, I was referred by ${name}`;
-  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-
-  // Shorten the link dynamically
-  const shortenedLink = await shortenLink(waLink);
-
-const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = shortenedLink;
-
-  // Show the modal
-  const modal = document.getElementById('default-modal');
-  modal.classList.remove('hidden');
-  
-  modal.addEventListener('click', function(event) {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-    
-    // Display the shortened link in the button with id="viewShorten"
-    const viewShortenButton = document.getElementById('viewShorten');
-    viewShortenButton.addEventListener('click', () => {
-      const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = shortenedLink;
-
-      // Add logic to share the link when the button is clicked
+    generateBtn.addEventListener("click", function () {
       
-      //shareLinkFromButton();
+        // Validate input
+  
+  
+      const uniqueID = generateUniqueID();
+      const waNumber = '2347086334968';
+       const name = nameInput.value.trim();
+       
+       if (!name.trim()) {
+         alert('Please enter your name.');
+         return;
+       }
+       
+       if (!/^[a-zA-Z\s]*$/.test(name)) {
+         alert('Please use only letters and spaces for your name.');
+         return;
+       }
+       
+  const linkTemplate = `https://wa.me/${waNumber}?text=%20Hi%2C%20I%20want%20to%20join%20Moonscholar.%20I%20was%20referred%20by%20${name}%20-Ref${uniqueID}.%20`;
+        
+        generatedLink.value = linkTemplate;
+        resultSection.classList.remove("hidden");
     });
-}
 
-async function shortenLink(longUrl) {
-  const apiUrl = `https://api-ssl.bitly.com/v4/shorten`;
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${bitlyAccessToken}`,
-    },
-    body: JSON.stringify({
-      long_url: longUrl,
-    }),
-  };
+    copyBtn.addEventListener("click", function () {
+        generatedLink.select();
+        document.execCommand("copy");
+    });
 
-  try {
-    const response = await fetch(apiUrl, requestOptions);
-    const data = await response.json();
+    nameInput.addEventListener("focus", function () {
+        if (generatedLink.value) {
+            copyBtn.click(); // Automatically copy the link when the input is focused
+        }
+    });
 
-    if (data && data.id) {
-      return data.id;
-    } else {
-      console.error('Failed to shorten link:', data);
-      return longUrl; // Return the original link in case of failure
-    }
-  } catch (error) {
-    console.error('Error during link shortening:', error);
-    return longUrl; // Return the original link in case of an error
-  }
-}
+    shortenBtn.addEventListener("click", function () {
+        const currentLink = generatedLink.value;
 
-// Example usage:
+        // Rebrandly API integration
+        const linkRequest = {
+            destination: currentLink,
+            domain: { fullName: "rebrand.ly" },
+            // You can include additional parameters like slashtag and title if needed
+            // slashtag: "A_NEW_SLASHTAG",
+            // title: "Rebrandly Link"
+        };
 
+        const requestHeaders = {
+            "Content-Type": "application/json",
+            "apikey": "c8e083cd229942f1a10f9f85f8dda9d3",
+            // Add your workspace ID if required
+            // "workspace": "YOUR_WORKSPACE_ID"
+        };
 
-function copyLink() {
-    const copiableLink = document.getElementById('copiableLink');
-    copiableLink.select();
-    document.execCommand('copy');
-  
-    // Update the "alert" id content
-    const alertElement = document.getElementById('alert');
-    alertElement.textContent = 'Link copied to clipboard!';
-  }
-  
-  document.getElementById('copiableLink').addEventListener('focus', function() {
-  copyLink();
-});
-
-      // Add event listener to close modal when clicking outside the modal content
+        fetch('https://api.rebrandly.com/v1/links', {
+            method: 'POST',
+            headers: requestHeaders,
+            body: JSON.stringify(linkRequest),
+        })
+            .then(response => response.json())
+            .then(link => {
+                const shortLink = link.shortUrl;
+                generatedLink.value = shortLink;
+                copyBtn.click(); // Automatically copy the shortened link
+            })
+            .catch(error => {
+                console.error('Error creating short link:', error);
+                // Handle errors in your web app
+            });
+    });
     
-  
-  function shareLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
+    shareBtn.addEventListener("click", function () {
+        const name = nameInput.value.trim();
+        const userNumber = "234906967373"; // Replace with the actual user's number
+        const userDestination = "Moonscholar TV"; // Replace with the actual destination
+        const cta = "Join now!"; // Replace with your Call-to-Action
 
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
+        const title = `Join ${userDestination} with ${name}`;
+        const text = `Hi, ${name}! You've been referred to ${userDestination}. Join now: ${generatedLink.value} ${cta}`;
 
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
-  }
+        if (navigator.share) {
+            navigator.share({
+                title: title,
+                text: text,
+                url: generatedLink.value || "",
+            })
+            .then(() => console.log('Shared successfully'))
+            .catch((error) => console.error('Error sharing:', error));
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            alert("Sharing is not supported in this browser.");
+        }
+    });
 
-  headSection.appendChild(ogUrlTag);
-
-  if (navigator.share) {
-    navigator.share({
-      title: 'Join Moon Scholar TV Now!!!',
-      text: 'Get The Latest Gist, Trends, News, Gossips and Entertainment on Moon Scholar TV!',
-      url: copiableLink.value,
-    })
-    .then(() => console.log('Link shared successfully'))
-    .catch((error) => console.error('Error sharing link:', error));
-  } else {
-    alert('Sharing is not supported in your browser.');
-  }
+    function generateUniqueID() {
+    const randomNumber = Math.floor(Math.random() * 100);
+    return randomNumber < 10 ? `00${randomNumber}` : randomNumber < 100 ? `0${randomNumber}` : `${randomNumber}`;
 }
 
-
-function closeModal() {
-  const modal = document.getElementById('default-modal');
-  modal.classList.add('hidden');
-}
-
-/*const bitlyAccessToken = '867f6b202992de920a602d38481d6e61067115fd'; // Replace with your Bitly access token
-
-async function shortenLink(longUrl) {
-  const apiUrl = 'https://api-ssl.bitly.com/v4/shorten';
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${bitlyAccessToken}`,
-    },
-    body: JSON.stringify({
-      long_url: longUrl,
-    }),
-  };
-
-  try {
-    const response = await fetch(apiUrl, requestOptions);
-    const data = await response.json();
-
-    if (data && data.id) {
-      return data.id;
-    } else {
-      console.error('Failed to shorten link:', data);
-      return longUrl; // Return the original link in case of failure
-    }
-  } catch (error) {
-    console.error('Error during link shortening:', error);
-    return longUrl; // Return the original link in case of an error
-  }
-}
-
-async function generateLink() {
-  const name = document.getElementById('name').value;
-
-  // Validate input
-  if (!name.trim()) {
-    alert('Please enter your name.');
-    return;
-  }
-
-  if (!/^[a-zA-Z\s]*$/.test(name)) {
-    alert('Please use only letters and spaces for your name.');
-    return;
-  }
-
-  const waNumber = '2347086334968';
-  const message = `Hi, I was referred by ${name}`;
-  const waLink = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-
-  // Shorten the link dynamically
- /* const shortenedLink = await shortenLink(waLink);*/
-
-  /*const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = waLink;
-
-  // Show the modal
-  const modal = document.getElementById('default-modal');
-  modal.classList.remove('hidden');
-
-  // Display the shortened link in the button with id="viewShorten"
-  const viewShortenButton = document.getElementById('viewShorten');
-viewShortenButton.addEventListener('click', () => {
-  // Add logic to share the link when the button is clicked
-  shareLinkFromButton();
 });
 
-function shareLinkFromButton() {
-  const shortenedLink = await shortenLink(waLink);
-
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.value = shortenedLink;
-  copiableLink.select();
-  document.execCommand('copy');
-
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
-
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
-  }
-
-  headSection.appendChild(ogUrlTag);
-
-  shareLink(); // Uncomment this line if you want to trigger the share function
-}
-
-// ... (existing code remains unchanged)
-
-}
-
-
-/*function copyLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  const alertElement = document.getElementById('alert');
-  alertElement.textContent = 'Link copied to clipboard!';
-}
-
-async function shareLink() {
-  const copiableLink = document.getElementById('copiableLink');
-  copiableLink.select();
-  document.execCommand('copy');
-
-  // Update Open Graph tags dynamically
-  const headSection = document.getElementById('head-section');
-  const ogUrlTag = document.createElement('meta');
-  ogUrlTag.setAttribute('property', 'og:url');
-  ogUrlTag.content = copiableLink.value;
-
-  // Replace existing og:url tag if it exists
-  const existingOgUrlTag = document.querySelector('meta[property="og:url"]');
-  if (existingOgUrlTag) {
-    headSection.removeChild(existingOgUrlTag);
-  }
-
-  headSection.appendChild(ogUrlTag);
-
-  // Display an alert or perform any other desired action
-  alert('Link copied to clipboard. Open Graph tags updated.');
-}
-
-// Example usage:*/
-
-
-
-  </script>
+    </script>
 </body>
 </html>
